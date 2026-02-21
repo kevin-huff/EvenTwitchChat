@@ -47,6 +47,13 @@ export class MessageBuffer {
   }
 
   getText(): string {
+    if (config.newestFirst) {
+      const reversed = [];
+      for (let i = this.messages.length - 1; i >= 0; i--) {
+        reversed.push(this.messages[i]);
+      }
+      return reversed.join("");
+    }
     return this.messages.join("");
   }
 

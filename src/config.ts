@@ -5,6 +5,7 @@ export interface Settings {
   messageFormat: "user: msg" | "> msg" | "msg";
   throttleInterval: number;
   maxMessages: number;
+  newestFirst: boolean;
 }
 
 /** Hardware limits — not user-configurable */
@@ -17,7 +18,8 @@ export const defaults: Settings = {
   maxUsernameLength: 15,
   messageFormat: "user: msg",
   throttleInterval: 300,
-  maxMessages: 50,
+  maxMessages: 8,
+  newestFirst: true,
 };
 
 /** Mutable runtime config — populated from settings UI before streaming starts */

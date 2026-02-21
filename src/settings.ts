@@ -76,9 +76,13 @@ export function showSettings(
         <input id="throttleInterval" type="range" min="100" max="1000" step="50" value="${s.throttleInterval}" />
         <div class="range-labels"><span>Fast</span><span>Battery Saver</span></div>
 
-        <label for="maxMessages">Message Density: <span id="density-val">${s.maxMessages}</span></label>
-        <input id="maxMessages" type="range" min="10" max="100" step="5" value="${s.maxMessages}" />
-        <div class="range-labels"><span>Compact</span><span>Spacious</span></div>
+        <label for="maxMessages">Lines to Show: <span id="lines-val">${s.maxMessages}</span></label>
+        <input id="maxMessages" type="range" min="3" max="15" step="1" value="${s.maxMessages}" />
+
+        <label class="checkbox-row">
+          <input id="newestFirst" type="checkbox" ${s.newestFirst ? "checked" : ""} />
+          Newest Messages First
+        </label>
 
         <button type="submit" id="connect-btn">Connect</button>
       </form>
@@ -92,8 +96,9 @@ export function showSettings(
     const usernameLenVal = form.querySelector("#usernameLen-val") as HTMLElement;
     const throttleSlider = form.querySelector("#throttleInterval") as HTMLInputElement;
     const throttleVal = form.querySelector("#throttle-val") as HTMLElement;
-    const densitySlider = form.querySelector("#maxMessages") as HTMLInputElement;
-    const densityVal = form.querySelector("#density-val") as HTMLElement;
+    const linesSlider = form.querySelector("#maxMessages") as HTMLInputElement;
+    const linesVal = form.querySelector("#lines-val") as HTMLElement;
+    const newestFirst = form.querySelector("#newestFirst") as HTMLInputElement;
 
     showUser.addEventListener("change", () => {
       usernameOpts.style.display = showUser.checked ? "" : "none";
@@ -104,8 +109,8 @@ export function showSettings(
     throttleSlider.addEventListener("input", () => {
       throttleVal.textContent = throttleSlider.value + "ms";
     });
-    densitySlider.addEventListener("input", () => {
-      densityVal.textContent = densitySlider.value;
+    linesSlider.addEventListener("input", () => {
+      linesVal.textContent = linesSlider.value;
     });
 
     form.addEventListener("submit", async (e) => {
@@ -119,7 +124,8 @@ export function showSettings(
         maxUsernameLength: Number(usernameLenSlider.value),
         messageFormat: (form.querySelector("#messageFormat") as HTMLSelectElement).value as Settings["messageFormat"],
         throttleInterval: Number(throttleSlider.value),
-        maxMessages: Number(densitySlider.value),
+        maxMessages: Number(linesSlider.value),
+        newestFirst: newestFirst.checked,
       };
 
       await saveSettings(settings, bridge);

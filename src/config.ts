@@ -1,6 +1,6 @@
 export const config = {
   /** Twitch channel to join (without #) */
-  channel: "xqc",
+  channel: "zilchgnu",
 
   /** Max total characters in the message buffer (textContainerUpgrade limit) */
   maxChars: 2000,

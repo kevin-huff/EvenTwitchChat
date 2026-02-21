@@ -1,17 +1,28 @@
 import { config } from "./config";
 
+/** Strip characters the G2 display can't render (emoji, symbols, etc.) */
+function stripUnsupported(text: string): string {
+  // Keep basic ASCII printable (0x20-0x7E) and common Latin-1 Supplement (0xA0-0xFF)
+  return text.replace(/[^\x20-\x7E\xA0-\xFF]/g, "").trim();
+}
+
 export class MessageBuffer {
   private messages: string[] = [];
 
   add(username: string, message: string): string {
+    const cleanUser = stripUnsupported(username);
+    const cleanMsg = stripUnsupported(message);
+
+    if (!cleanMsg) return this.getText();
+
     const truncatedUser =
-      username.length > config.maxUsernameLength
-        ? username.slice(0, config.maxUsernameLength)
-        : username;
+      cleanUser.length > config.maxUsernameLength
+        ? cleanUser.slice(0, config.maxUsernameLength)
+        : cleanUser || "???";
     const truncatedMsg =
-      message.length > config.maxMessageLength
-        ? message.slice(0, config.maxMessageLength) + "…"
-        : message;
+      cleanMsg.length > config.maxMessageLength
+        ? cleanMsg.slice(0, config.maxMessageLength) + "..."
+        : cleanMsg;
 
     this.messages.push(`${truncatedUser}: ${truncatedMsg}\n`);
 

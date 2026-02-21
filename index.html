@@ -4,8 +4,61 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EvenTwitchChat</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #1a1a2e; color: #e0e0e0;
+        padding: 16px; min-height: 100vh;
+      }
+      #app h1 { font-size: 1.3rem; text-align: center; margin-bottom: 20px; color: #9146ff; }
+      #settings-form { display: flex; flex-direction: column; gap: 10px; max-width: 400px; margin: 0 auto; }
+      #settings-form label { font-size: 0.9rem; color: #b0b0c0; }
+      #settings-form input[type="text"],
+      #settings-form select {
+        width: 100%; padding: 10px; border: 1px solid #333; border-radius: 6px;
+        background: #16213e; color: #e0e0e0; font-size: 1rem;
+      }
+      #settings-form input[type="text"]:focus,
+      #settings-form select:focus { outline: none; border-color: #9146ff; }
+      #settings-form input[type="range"] { width: 100%; accent-color: #9146ff; }
+      .checkbox-row {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 1rem !important; color: #e0e0e0 !important; cursor: pointer;
+      }
+      .checkbox-row input { width: 18px; height: 18px; accent-color: #9146ff; }
+      #username-opts { padding-left: 26px; }
+      .range-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: #666; margin-top: -4px; }
+      #connect-btn {
+        margin-top: 12px; padding: 14px; border: none; border-radius: 8px;
+        background: #9146ff; color: #fff; font-size: 1.1rem; font-weight: 600;
+        cursor: pointer; transition: background 0.15s;
+      }
+      #connect-btn:hover { background: #7c3aed; }
+      #connect-btn:active { background: #6d28d9; }
+      #status-view { text-align: center; padding: 40px 16px; max-width: 400px; margin: 0 auto; }
+      #status-view h2 { color: #9146ff; margin-bottom: 8px; }
+      #status-view p { color: #888; font-size: 0.9rem; }
+      #log { font-family: monospace; font-size: 12px; padding: 10px; color: #555; white-space: pre-wrap; word-break: break-all; }
+    </style>
   </head>
   <body>
+    <div id="app"></div>
+    <pre id="log"></pre>
+    <script>
+      // Visual logger for debugging on phone (no dev tools)
+      window._log = function(msg) {
+        var el = document.getElementById('log');
+        if (el) el.textContent += msg + '\n';
+      };
+      window.onerror = function(msg, src, line) {
+        window._log('ERROR: ' + msg + ' (' + src + ':' + line + ')');
+      };
+      window.addEventListener('unhandledrejection', function(e) {
+        window._log('REJECT: ' + e.reason);
+      });
+      window._log('page loaded');
+    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -1,15 +1,14 @@
 import tmi from "tmi.js";
-import { config } from "./config";
 
 export type MessageCallback = (username: string, message: string) => void;
 
-export function connectTwitch(onMessage: MessageCallback): Promise<void> {
+export function connectTwitch(channel: string, onMessage: MessageCallback): Promise<void> {
   const client = new tmi.Client({
     connection: {
       secure: true,
       reconnect: true,
     },
-    channels: [config.channel],
+    channels: [channel],
   });
 
   client.on("message", (_channel, tags, message, self) => {
@@ -19,6 +18,6 @@ export function connectTwitch(onMessage: MessageCallback): Promise<void> {
   });
 
   return client.connect().then(() => {
-    console.log(`Connected to #${config.channel}`);
+    console.log(`Connected to #${channel}`);
   });
 }

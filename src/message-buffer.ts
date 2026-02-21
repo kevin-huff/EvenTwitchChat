@@ -1,4 +1,4 @@
-import { config } from "./config";
+import { config, MAX_CHARS, MAX_MESSAGE_LENGTH } from "./config";
 
 /** Strip characters the G2 display can't render (emoji, symbols, etc.) */
 function stripUnsupported(text: string): string {
@@ -10,28 +10,36 @@ export class MessageBuffer {
   private messages: string[] = [];
 
   add(username: string, message: string): string {
-    const cleanUser = stripUnsupported(username);
     const cleanMsg = stripUnsupported(message);
-
     if (!cleanMsg) return this.getText();
 
-    const truncatedUser =
-      cleanUser.length > config.maxUsernameLength
-        ? cleanUser.slice(0, config.maxUsernameLength)
-        : cleanUser || "???";
     const truncatedMsg =
-      cleanMsg.length > config.maxMessageLength
-        ? cleanMsg.slice(0, config.maxMessageLength) + "..."
+      cleanMsg.length > MAX_MESSAGE_LENGTH
+        ? cleanMsg.slice(0, MAX_MESSAGE_LENGTH) + "..."
         : cleanMsg;
 
-    this.messages.push(`${truncatedUser}: ${truncatedMsg}\n`);
+    let line: string;
+    if (config.showUsernames && config.messageFormat === "user: msg") {
+      const cleanUser = stripUnsupported(username);
+      const truncatedUser =
+        cleanUser.length > config.maxUsernameLength
+          ? cleanUser.slice(0, config.maxUsernameLength)
+          : cleanUser || "???";
+      line = `${truncatedUser}: ${truncatedMsg}\n`;
+    } else if (config.showUsernames && config.messageFormat === "> msg") {
+      line = `> ${truncatedMsg}\n`;
+    } else {
+      line = `${truncatedMsg}\n`;
+    }
+
+    this.messages.push(line);
 
     if (this.messages.length > config.maxMessages) {
       this.messages.splice(0, this.messages.length - config.maxMessages);
     }
 
     // Trim oldest messages until total chars fit within limit
-    while (this.totalChars() > config.maxChars && this.messages.length > 1) {
+    while (this.totalChars() > MAX_CHARS && this.messages.length > 1) {
       this.messages.shift();
     }
 

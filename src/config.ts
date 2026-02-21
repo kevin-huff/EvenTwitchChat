@@ -1,19 +1,24 @@
-export const config = {
-  /** Twitch channel to join (without #) */
-  channel: "zilchgnu",
+export interface Settings {
+  channel: string;
+  showUsernames: boolean;
+  maxUsernameLength: number;
+  messageFormat: "user: msg" | "> msg" | "msg";
+  throttleInterval: number;
+  maxMessages: number;
+}
 
-  /** Max total characters in the message buffer (textContainerUpgrade limit) */
-  maxChars: 2000,
+/** Hardware limits — not user-configurable */
+export const MAX_CHARS = 2000;
+export const MAX_MESSAGE_LENGTH = 200;
 
-  /** Minimum interval between display updates (ms) */
-  throttleInterval: 300,
-
-  /** Max messages retained in the buffer */
-  maxMessages: 50,
-
-  /** Max characters for displayed username */
+export const defaults: Settings = {
+  channel: "",
+  showUsernames: true,
   maxUsernameLength: 15,
+  messageFormat: "user: msg",
+  throttleInterval: 300,
+  maxMessages: 50,
+};
 
-  /** Max characters for displayed message text */
-  maxMessageLength: 200,
-} as const;
+/** Mutable runtime config — populated from settings UI before streaming starts */
+export const config: Settings = { ...defaults };

@@ -1,0 +1,6 @@
+{
+  "name": "EvenTwitchChat",
+  "description": "Read-only Twitch chat viewer for Even G2 glasses",
+  "version": "1.0.0",
+  "author": "khuff"
+}
